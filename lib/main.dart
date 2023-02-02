@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'diary_screen.dart';
+import 'login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,10 +9,20 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  static const String _title = 'Digital Diary';
+
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: DiaryApp(),
+    return MaterialApp(
+      title: _title,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Center(child: Text(_title)),
+          backgroundColor: Colors.tealAccent,
+          foregroundColor: Colors.black,
+        ),
+        body: const LoginScreen(),
+      ),
       debugShowCheckedModeBanner: false,
     );
   }
