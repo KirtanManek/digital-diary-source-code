@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-import 'signup_view.dart';
-import 'tasks_view.dart';
+import 'login_view.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreen();
+  State<SignupScreen> createState() => _SignupScreen();
 }
 
-class _LoginScreen extends State<LoginScreen> {
+class _SignupScreen extends State<SignupScreen> {
   TextEditingController userNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -20,6 +20,16 @@ class _LoginScreen extends State<LoginScreen> {
   bool validatePassword(String pass) {
     String password = pass.trim();
     if (passValid.hasMatch(password)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  RegExp emailValid = RegExp(r"\S+@\S+\.\S+");
+  bool validateEmail(String mail) {
+    String email = mail.trim();
+    if (emailValid.hasMatch(email)) {
       return true;
     } else {
       return false;
@@ -50,14 +60,14 @@ class _LoginScreen extends State<LoginScreen> {
             child: ListView(
               children: <Widget>[
                 const Padding(
-                  padding: EdgeInsets.all(75),
+                  padding: EdgeInsets.all(60),
                   child: Center(
                     child: Text(
                       "Digital Diary",
                       style: TextStyle(
-                        fontSize: 45,
-                        fontFamily: 'ShadowsIntoLight',
-                        fontWeight: FontWeight.bold
+                          fontSize: 45,
+                          fontFamily: 'ShadowsIntoLight',
+                          fontWeight: FontWeight.bold
                       ),
                     ),
                   ),
@@ -66,7 +76,7 @@ class _LoginScreen extends State<LoginScreen> {
                   alignment: Alignment.center,
                   padding: const EdgeInsets.all(10),
                   child: const Text(
-                    'Sign in',
+                    'Sign up',
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -90,6 +100,31 @@ class _LoginScreen extends State<LoginScreen> {
                   ),
                 ),
                 Container(
+                  padding: const EdgeInsets.all(10),
+                  child: TextFormField(
+                    controller: emailController,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Email',
+                        labelStyle: TextStyle(color: Colors.black)),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Email cannot be empty';
+                      } else if (value.length < 3) {
+                        return 'UserName is too short';
+                      } else {
+                        bool result = validateEmail(value);
+                        if (result) {
+                          return null;
+                        } else {
+                          return "Please enter correct email";
+                        }
+                      }
+                    },
+                  ),
+                ),
+                Container(
                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                   child: TextFormField(
                     obscureText: true,
@@ -108,7 +143,7 @@ class _LoginScreen extends State<LoginScreen> {
                         if (result) {
                           return null;
                         } else {
-                          return "Wrong password";
+                          return "Password should contain at least \none Capital, \none small letter, \none Number & \none Special Character";
                         }
                       }
                     },
@@ -125,7 +160,7 @@ class _LoginScreen extends State<LoginScreen> {
                         ),
                       ),
                       child: const Text(
-                        "Login",
+                        "Create Account",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 18.0,
@@ -133,12 +168,8 @@ class _LoginScreen extends State<LoginScreen> {
                       ),
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
-                          // print(userNameController.text);
-                          // print(passwordController.text);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const Tasks()),
-                          );
+                          print(userNameController.text);
+                          print(passwordController.text);
                         }
                       },
                     )),
@@ -146,21 +177,21 @@ class _LoginScreen extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     const Text(
-                      'Does not have account?',
+                      'Already have an account?',
                       style: TextStyle(fontSize: 20, color: Colors.black),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(4, 0, 0, 0),
                       child: TextButton(
                         child: const Text(
-                          'Sign up',
+                          'Sign in',
                           style:
-                              TextStyle(fontSize: 20, color: Colors.tealAccent),
+                          TextStyle(fontSize: 20, color: Colors.tealAccent),
                         ),
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const SignupScreen()),
+                            MaterialPageRoute(builder: (context) => const LoginScreen()),
                           );
                         },
                       ),
@@ -174,7 +205,7 @@ class _LoginScreen extends State<LoginScreen> {
       ),
     );
   }
-  // String? _validateUserName(String? value){
-  //
-  // }
+// String? _validateUserName(String? value){
+//
+// }
 }

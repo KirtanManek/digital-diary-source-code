@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class DiaryApp extends StatefulWidget {
-  const DiaryApp({Key? key}) : super(key: key);
+class Tasks extends StatefulWidget {
+  const Tasks({Key? key}) : super(key: key);
 
   @override
-  DiaryAppState createState() => DiaryAppState();
+  TasksState createState() => TasksState();
 }
 
-class DiaryAppState extends State<DiaryApp> {
+class TasksState extends State<Tasks> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _taskController = TextEditingController();
   final Map<String, List<Task>> _tasks = {};
@@ -18,9 +18,29 @@ class DiaryAppState extends State<DiaryApp> {
       key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xffac255e),
+                Color(0xffca485c),
+                Color(0xffe16b5c),
+                Color(0xfff39060),
+                Color(0xffffb56b),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
         title: const Text(
-          'Diary App',
-          style: TextStyle(color: Colors.black),
+          'Tasks',
+          style: TextStyle(
+            color: Colors.black,
+            fontFamily: 'ShadowsIntoLight',
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         backgroundColor: Colors.blue,
         elevation: 0,
