@@ -67,8 +67,7 @@ class _SignupScreen extends State<SignupScreen> {
                       style: TextStyle(
                           fontSize: 45,
                           fontFamily: 'ShadowsIntoLight',
-                          fontWeight: FontWeight.bold
-                      ),
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -186,12 +185,13 @@ class _SignupScreen extends State<SignupScreen> {
                         child: const Text(
                           'Sign in',
                           style:
-                          TextStyle(fontSize: 20, color: Colors.tealAccent),
+                              TextStyle(fontSize: 20, color: Colors.tealAccent),
                         ),
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const LoginScreen()),
+                            MaterialPageRoute(
+                                builder: (context) => const LoginScreen()),
                           );
                         },
                       ),

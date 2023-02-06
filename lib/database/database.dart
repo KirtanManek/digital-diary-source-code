@@ -1,10 +1,11 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class MyDatabasetabase{
+class MyDatabase{
   Future<Database> initDatabase() async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String databasePath = join(appDocDir.path, 'digital-diary.db');
@@ -25,5 +26,23 @@ class MyDatabasetabase{
       data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
       await File(path).writeAsBytes(bytes);
     }
+  }
+
+  Future<List<Map<String, Object?>>> getDataFromUserTable() async {
+    Database db = await initDatabase();
+    List<Map<String, Object?>> data = await db.rawQuery('SELECT * FROM MST_User');
+    if (kDebugMode) {
+      print("Data Length ::: ${data.length}");
+    }
+    return data;
+  }
+
+  Future<String> getPassword(String userEmail) async {
+    Database db = await initDatabase();
+    List<Map<String, Object?>> data = await db.rawQuery('SELECT UserPassword FROM MST_User WHERE MST_User.UserEmail = "$userEmail"');
+    if (kDebugMode) {
+      print("Data Password ::: $data");
+    }
+    return data[0]['UserPassword'].toString();
   }
 }
