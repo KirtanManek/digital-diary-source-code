@@ -1,4 +1,4 @@
-import 'package:digitaldiary/database/database.dart';
+import 'package:digitaldiary/database/database_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -13,29 +13,29 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreen extends State<LoginScreen> {
-  TextEditingController userNameController = TextEditingController();
+  TextEditingController userEmailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   // RegExp passValid = RegExp(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)");
-  bool validatePassword(String pass) {
-    String password = pass.trim();
-    String? databasePassword;
-    MyDatabase().getPassword(userEmail).then(
-          (value) {
-              databasePassword = value;
-              // if (kDebugMode) {
-              //   print(value);
-              // }
-            },
-        );
-    if (databasePassword == password) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  // bool validatePassword(String pass) {
+  //   bool? result;
+  //   MyDatabase().getPassword(userEmail).then(
+  //     (value) {
+  //       if (kDebugMode) {
+  //         print(pass);
+  //         print(value);
+  //       }
+  //       if (pass.compareTo(value.toString()) == 0) {
+  //         result = true;
+  //       } else {
+  //         result = false;
+  //       }
+  //     },
+  //   );
+  //   return result!;
+  // }
 
   late String userEmail;
 
@@ -43,8 +43,12 @@ class _LoginScreen extends State<LoginScreen> {
   void initState() {
     super.initState();
     MyDatabase().copyPasteAssetFileToRoot().then(
-          (value) => print('DataBase Initialized Successfully'),
-        );
+      (value) {
+        if (kDebugMode) {
+          print('DataBase Initialized Successfully');
+        }
+      },
+    );
     MyDatabase().getDataFromUserTable();
   }
 
@@ -97,7 +101,7 @@ class _LoginScreen extends State<LoginScreen> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       child: TextFormField(
-                        controller: userNameController,
+                        controller: userEmailController,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'User Email',
@@ -109,6 +113,7 @@ class _LoginScreen extends State<LoginScreen> {
                           } else if (value.length < 3) {
                             return 'UserName is too short';
                           } else {
+                            userEmail = value;
                             return null;
                           }
                         },
@@ -129,11 +134,23 @@ class _LoginScreen extends State<LoginScreen> {
                           } else if (value.length < 5) {
                             return 'Password is too short';
                           } else {
-                            bool result = validatePassword(value);
-                            if (result) {
-                              return null;
-                            } else {
-                              return "Wrong password";
+                            bool result = false;
+                            MyDatabase()
+                                .validatePassword(userEmail, value)
+                                .then(
+                              (value1) {
+                                if (kDebugMode) {
+                                  print(value1);
+                                }
+                                if (value1) {
+                                  return false;
+                                } else {
+                                  return true;
+                                }
+                              },
+                            );
+                            if (kDebugMode) {
+                              print(result);
                             }
                           }
                         },
@@ -204,7 +221,4 @@ class _LoginScreen extends State<LoginScreen> {
       ),
     );
   }
-  // String? _validateUserName(String? value){
-  //
-  // }
 }

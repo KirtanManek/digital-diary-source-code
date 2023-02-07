@@ -37,12 +37,13 @@ class MyDatabase{
     return data;
   }
 
-  Future<String> getPassword(String userEmail) async {
+  Future<bool> validatePassword(String userEmail, String userPassword) async {
     Database db = await initDatabase();
-    List<Map<String, Object?>> data = await db.rawQuery('SELECT UserPassword FROM MST_User WHERE MST_User.UserEmail = "$userEmail"');
+
+    List<Map<String, Object?>> data = await db.rawQuery('SELECT UserPassword FROM MST_User WHERE MST_User.UserEmail = ?',[userEmail]);
     if (kDebugMode) {
-      print("Data Password ::: $data");
+      print(data[0]['UserPassword'].toString() == userPassword);
     }
-    return data[0]['UserPassword'].toString();
+    return data[0]['UserPassword'].toString().compareTo(userPassword) == 0;
   }
 }
