@@ -43,7 +43,7 @@ class _LoginScreen extends State<LoginScreen> {
   void initState() {
     super.initState();
     MyDatabase().copyPasteAssetFileToRoot().then(
-      (value) {
+          (value) {
         if (kDebugMode) {
           print('DataBase Initialized Successfully');
         }
@@ -134,24 +134,32 @@ class _LoginScreen extends State<LoginScreen> {
                           } else if (value.length < 5) {
                             return 'Password is too short';
                           } else {
-                            bool result = false;
+                            String? result = "wrong password";
                             MyDatabase()
-                                .validatePassword(userEmail, value)
+                                .validatePassword(userEmail)
                                 .then(
-                              (value1) {
+                                  (value1) {
                                 if (kDebugMode) {
                                   print(value1);
                                 }
-                                if (value1) {
-                                  return false;
-                                } else {
-                                  return true;
+                                if (value1.compareTo(value) == 0) {
+                                  print(value1.compareTo(value));
+                                  return null;
                                 }
+                                // else {
+                                //   return null;
+                                // }
                               },
                             );
-                            if (kDebugMode) {
-                              print(result);
-                            }
+                            // if (kDebugMode) {
+                            //   print(result);
+                            // }
+                            // if (result.compareTo(value) != 0) {
+                            //   return "Wrong password";
+                            // } else {
+                            //   return null;
+                            // }
+                            return result;
                           }
                         },
                       ),
