@@ -134,7 +134,7 @@ class _LoginScreen extends State<LoginScreen> {
                           } else if (value.length < 5) {
                             return 'Password is too short';
                           } else {
-                            String? result = "wrong password";
+                            // String? result = "wrong password";
                             MyDatabase()
                                 .validatePassword(userEmail)
                                 .then(
@@ -143,23 +143,12 @@ class _LoginScreen extends State<LoginScreen> {
                                   print(value1);
                                 }
                                 if (value1.compareTo(value) == 0) {
-                                  print(value1.compareTo(value));
+                                  // print(value1.compareTo(value));
                                   return null;
                                 }
-                                // else {
-                                //   return null;
-                                // }
                               },
                             );
-                            // if (kDebugMode) {
-                            //   print(result);
-                            // }
-                            // if (result.compareTo(value) != 0) {
-                            //   return "Wrong password";
-                            // } else {
-                            //   return null;
-                            // }
-                            return result;
+                            return null;
                           }
                         },
                       ),
