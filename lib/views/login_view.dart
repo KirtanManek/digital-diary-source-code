@@ -1,4 +1,5 @@
 import 'package:digitaldiary/database/database_helper.dart';
+import 'package:digitaldiary/views/models/user.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -36,6 +37,20 @@ class _LoginScreen extends State<LoginScreen> {
   //   );
   //   return result!;
   // }
+
+  validate(BuildContext ctx) async {
+    if (userEmailController.text != "" && passwordController.text != "") {
+      var dbHelper = MyDatabase();
+
+      User test =
+      await dbHelper.checkLogin(userEmailController.text, passwordController.text);
+      // just for test what we got here
+      // showFlushBar(ctx, "test", test.toString());
+      //navigateToUsersList(ctx);
+    } else {
+
+    }
+  }
 
   late String userEmail;
 
@@ -134,6 +149,7 @@ class _LoginScreen extends State<LoginScreen> {
                           } else if (value.length < 5) {
                             return 'Password is too short';
                           } else {
+                            var dbHelper = MyDatabase();
                             // String? result = "wrong password";
                             MyDatabase()
                                 .validatePassword(userEmail)

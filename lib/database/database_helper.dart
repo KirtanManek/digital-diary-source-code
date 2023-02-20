@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:digitaldiary/views/models/user.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -40,10 +41,19 @@ class MyDatabase{
   Future<String> validatePassword(String userEmail) async {
     Database db = await initDatabase();
 
-    List<Map<String, Object?>> data = await db.rawQuery('SELECT UserPassword FROM MST_User WHERE MST_User.UserEmail = ?',[userEmail]);
+    List<User> data = (await db.rawQuery('SELECT UserPassword FROM MST_User WHERE MST_User.UserEmail = ?',[userEmail])).cast<User>();
     if (kDebugMode) {
-      print(data[0]['UserPassword'].toString());
+      print(data[0].toString());
     }
-    return data[0]['UserPassword'].toString();
+    return data[0].toString();
+  }
+
+  Future<dynamic> checkLogin(String userEmail, String password) async {
+    Database dbClient = await initDatabase();
+    var res = await dbClient.rawQuery('SELECT * FROM MST_User WHERE MST_User.UserEmail = ? and MST_User.UserPassword = ?',[userEmail,password]);
+    if (res.isNotEmpty) {
+      return User.fromMap(res.first);
+    }
+    return null;
   }
 }
