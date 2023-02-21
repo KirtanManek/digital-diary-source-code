@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:digitaldiary/views/models/user.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -38,22 +37,15 @@ class MyDatabase{
     return data;
   }
 
-  Future<String> validatePassword(String userEmail) async {
+  Future<bool> validatePassword(String userEmail, String password) async {
     Database db = await initDatabase();
 
-    List<User> data = (await db.rawQuery('SELECT UserPassword FROM MST_User WHERE MST_User.UserEmail = ?',[userEmail])).cast<User>();
+    var data = await db.rawQuery('SELECT UserPassword FROM MST_User WHERE MST_User.UserEmail = ?',[userEmail]);
     if (kDebugMode) {
-      print(data[0].toString());
+      print(data[0]['UserPassword'].toString());
+      print(password.toString().compareTo(data[0]['UserPassword'].toString()) == 0);
+      print(password);
     }
-    return data[0].toString();
-  }
-
-  Future<dynamic> checkLogin(String userEmail, String password) async {
-    Database dbClient = await initDatabase();
-    var res = await dbClient.rawQuery('SELECT * FROM MST_User WHERE MST_User.UserEmail = ? and MST_User.UserPassword = ?',[userEmail,password]);
-    if (res.isNotEmpty) {
-      return User.fromMap(res.first);
-    }
-    return null;
+    return password.compareTo(data[0]['UserPassword']!.toString()) == 0;
   }
 }
