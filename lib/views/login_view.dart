@@ -1,3 +1,4 @@
+import 'package:digitaldiary/API/api.dart';
 import 'package:digitaldiary/database/database_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -55,6 +56,33 @@ class _LoginScreen extends State<LoginScreen> {
     );
   }
 
+  loginUsingApi() async {
+    Map<dynamic, dynamic> data = await createLoginState(userEmailController.text.toString(), passwordController.text.toString());
+    if (data['userEmail']
+                .toString()
+                .compareTo(userEmailController.text.toString()) ==
+            0 &&
+        data['userPassword']
+                .toString()
+                .compareTo(passwordController.text.toString()) ==
+            0) {
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return const Tasks();
+            },
+          ),
+        );
+      }
+    }
+    else {
+      if (kDebugMode) {
+        print("Login failed");
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +113,7 @@ class _LoginScreen extends State<LoginScreen> {
                     child: Text(
                       "Digital Diary",
                       style: TextStyle(
-                          fontSize: 45,
+                          fontSize: 44,
                           fontFamily: 'ShadowsIntoLight',
                           fontWeight: FontWeight.bold),
                     ),
@@ -158,9 +186,7 @@ class _LoginScreen extends State<LoginScreen> {
                     ),
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        // print(userNameController.text);
-                        // print(passwordController.text);
-                        login();
+                        loginUsingApi();
                       }
                     },
                   ),
