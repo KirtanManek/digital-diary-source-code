@@ -57,7 +57,7 @@ class _LoginScreen extends State<LoginScreen> {
   }
 
   loginUsingApi() async {
-    Map<dynamic, dynamic> data = await createLoginState(userEmailController.text.toString(), passwordController.text.toString());
+    Map<dynamic, dynamic> data = await validateLogin(userEmailController.text.toString(), passwordController.text.toString());
     if (data['userEmail']
                 .toString()
                 .compareTo(userEmailController.text.toString()) ==
