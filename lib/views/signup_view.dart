@@ -1,3 +1,7 @@
+import 'package:digitaldiary/database/database_helper.dart';
+import 'package:digitaldiary/views/models/user.dart';
+import 'package:digitaldiary/views/tasks_view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'login_view.dart';
@@ -11,7 +15,7 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreen extends State<SignupScreen> {
   TextEditingController userNameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+  TextEditingController userEmailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -101,7 +105,7 @@ class _SignupScreen extends State<SignupScreen> {
                 Container(
                   padding: const EdgeInsets.all(10),
                   child: TextFormField(
-                    controller: emailController,
+                    controller: userEmailController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Email',
@@ -117,7 +121,7 @@ class _SignupScreen extends State<SignupScreen> {
                         if (result) {
                           return null;
                         } else {
-                          return "Please enter correct email";
+                          return "Please enter correct form of email";
                         }
                       }
                     },
@@ -149,29 +153,90 @@ class _SignupScreen extends State<SignupScreen> {
                   ),
                 ),
                 Container(
-                    height: 50,
-                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.tealAccent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
+                  height: 50,
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.tealAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                      child: const Text(
-                        "Create Account",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18.0,
-                        ),
+                    ),
+                    child: const Text(
+                      "Create Account",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18.0,
                       ),
-                      onPressed: () {
-                        if (formKey.currentState!.validate()) {
+                    ),
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        // Below if statement is used for debugging
+                        if (kDebugMode) {
                           print(userNameController.text);
+                          print(userEmailController.text);
                           print(passwordController.text);
                         }
-                      },
-                    )),
+
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Please Confirm"),
+                              content: const Text(
+                                  "Are you sure you want to continue?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () async {
+                                    // Remove the box
+                                    var data = <String, dynamic>{};
+                                    data["UserName"] = userNameController.text;
+                                    data["UserEmail"] =
+                                        userEmailController.text;
+                                    data["UserPassword"] =
+                                        passwordController.text;
+                                    int? id = await MyDatabase()
+                                        .insertDataIntoDatabase(data);
+
+                                    // Close the dialog
+                                    if (context.mounted) {
+                                      if (id!.isFinite) {
+                                        Navigator.of(context).pop();
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return Tasks(
+                                                User(
+                                                        id,
+                                                        userNameController.text,
+                                                        userEmailController.text,
+                                                        passwordController.text)
+                                                    .toMap(),
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  },
+                                  child: const Text('Yes'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    // Close the dialog
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('No'),
+                                )
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -205,7 +270,4 @@ class _SignupScreen extends State<SignupScreen> {
       ),
     );
   }
-// String? _validateUserName(String? value){
-//
-// }
 }

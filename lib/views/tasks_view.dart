@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Tasks extends StatefulWidget {
-  const Tasks({Key? key}) : super(key: key);
+  const Tasks(Map<String, dynamic> map, {Key? key}) : super(key: key);
 
   @override
   TasksState createState() => TasksState();

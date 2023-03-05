@@ -29,7 +29,6 @@ class _LoginScreen extends State<LoginScreen> {
         }
       },
     );
-    MyDatabase().getDataFromUserTable();
   }
 
   login() async {
@@ -37,13 +36,13 @@ class _LoginScreen extends State<LoginScreen> {
     String passwd = passwordController.text;
 
     await MyDatabase().validatePassword(uid, passwd).then(
-      (userData) {
-        if (userData) {
+      (user) {
+        if (passwd.compareTo(user.password!) == 0) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) {
-                return const Tasks();
+                return Tasks(user.toMap());
               },
             ),
           );
@@ -57,7 +56,9 @@ class _LoginScreen extends State<LoginScreen> {
   }
 
   loginUsingApi() async {
-    Map<dynamic, dynamic> data = await validateLogin(userEmailController.text.toString(), passwordController.text.toString());
+    Map<dynamic, dynamic> data = await validateLogin(
+        userEmailController.text.toString(),
+        passwordController.text.toString());
     if (data['userEmail']
                 .toString()
                 .compareTo(userEmailController.text.toString()) ==
@@ -71,13 +72,12 @@ class _LoginScreen extends State<LoginScreen> {
           context,
           MaterialPageRoute(
             builder: (context) {
-              return const Tasks();
+              return Tasks();
             },
           ),
         );
       }
-    }
-    else {
+    } else {
       if (kDebugMode) {
         print("Login failed");
       }
@@ -186,7 +186,11 @@ class _LoginScreen extends State<LoginScreen> {
                     ),
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        loginUsingApi();
+                        // below function is used for login using api
+                        // loginUsingApi();
+
+                        // below function is used for login using database
+                        login();
                       }
                     },
                   ),
