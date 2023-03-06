@@ -42,7 +42,6 @@ class TasksState extends State<Tasks> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
       ),

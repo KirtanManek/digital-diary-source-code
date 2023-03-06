@@ -29,19 +29,19 @@ class MyDatabase {
     }
   }
 
-  // Future<List<Map<String, Object?>>> getDataFromUserTable() async {
-  //   Database db = await initDatabase();
-  //   List<Map<String, Object?>> data = await db.rawQuery('SELECT * FROM MST_User');
-  //   if (kDebugMode) {
-  //     print("Data Length ::: ${data.length}");
-  //   }
-  //   return data;
-  // }
+  Future<List<Map<String, Object?>>> getDataFromUserTable() async {
+    Database db = await initDatabase();
+    List<Map<String, Object?>> data = await db.rawQuery('SELECT * FROM MST_User');
+    if (kDebugMode) {
+      print("Data Length ::: ${data.length}");
+    }
+    return data;
+  }
 
   Future<User> validatePassword(String userEmail, String password) async {
     Database db = await initDatabase();
     var data = await db.rawQuery(
-        'SELECT UserPassword FROM MST_User WHERE MST_User.UserEmail = ?', [userEmail]);
+        'SELECT * FROM MST_User WHERE MST_User.UserEmail = ?', [userEmail]);
 
     // below if statement is used for debugging
     if (kDebugMode) {
@@ -50,12 +50,16 @@ class MyDatabase {
       print(password);
     }
 
+    // return password.toString().compareTo(data[0]['UserPassword'].toString()) == 0;
     return User.fromMap(data[0]);
   }
 
   Future<int?> insertDataIntoDatabase(Map<String, dynamic> data) async {
     Database db = await initDatabase();
     int id = await db.insert('MST_User', data);
+    if (kDebugMode) {
+      print(id);
+    }
     return id;
   }
 }

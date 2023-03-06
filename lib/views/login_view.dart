@@ -1,5 +1,6 @@
 import 'package:digitaldiary/API/api.dart';
 import 'package:digitaldiary/database/database_helper.dart';
+import 'package:digitaldiary/views/models/user.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -32,17 +33,17 @@ class _LoginScreen extends State<LoginScreen> {
   }
 
   login() async {
-    String uid = userEmailController.text;
-    String passwd = passwordController.text;
+    String useremail = userEmailController.text;
+    String password = passwordController.text;
 
-    await MyDatabase().validatePassword(uid, passwd).then(
+    await MyDatabase().validatePassword(useremail, password).then(
       (user) {
-        if (passwd.compareTo(user.password!) == 0) {
+        if (user.password!.compareTo(password) == 0) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) {
-                return Tasks(user.toMap());
+                return Tasks(User(1, "admin", userEmailController.text, passwordController.text).toMap());
               },
             ),
           );
@@ -72,7 +73,7 @@ class _LoginScreen extends State<LoginScreen> {
           context,
           MaterialPageRoute(
             builder: (context) {
-              return Tasks();
+              return Tasks(User(data['id'], data['userName'], userEmailController.text, passwordController.text).toMap());
             },
           ),
         );
